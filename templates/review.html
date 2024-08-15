@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review News</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        p {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <h1>Review News and Images</h1>
+
+    <form method="post">
+        <h2><strong>Subject Line:</strong> {{ news.Subject }}</h2>
+        <h2><strong>Date:</strong> {{ news.Date }}</h2>
+        {% for index, news_item in enumerate(news.News) %}
+            <h2>{{ news_item.Title }}</h2>
+            <p><strong>Image Page:</strong> {{ news_item.Image_Index }}</p>
+            <p><strong>Image Source:</strong> {{ news_item.Image }}</p>
+            <p><strong>Image Script:</strong> {{ news_item.ImageScript }}</p>
+            <label for="image_credit_{{ index }}"><strong>Image Credit:</strong></label>
+            <input type="text" id="image_credit_{{ index }}" name="image_credit_{{ index }}" value="{{ news_item.ImageCredit }}"><br><br>
+        {% endfor %}
+        <button type="submit">Finalize</button>
+    </form>
+</body>
+</html>
