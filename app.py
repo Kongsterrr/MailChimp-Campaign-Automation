@@ -8,11 +8,14 @@ from News_Template.AlsoFeatured import AlsoFeatured
 from News_Template.BeforeContent import before_content_html
 from News_Template.AfterContent import after_content_html
 from main import campaign_content, create_preview_text, create_campaign, send_test_email
+from dotenv import load_dotenv
+
 from flask import flash
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/Users/Jack/Desktop/Newsletter/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)

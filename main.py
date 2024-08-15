@@ -16,47 +16,52 @@ load_dotenv()
 
 LIST_ID = os.getenv('MAILCHIMP_LIST_ID')
 API_KEY = os.getenv('MAILCHIMP_API_KEY')
-SERVER = os.getenv('MAILCHIMP_SERVER')
+SERVER_PREFIX = os.getenv('MAILCHIMP_SERVER_PREFIX')
 
 CLIENT = MailchimpMarketing.Client()
+
 CLIENT.set_config({
     "api_key": API_KEY,
-    "server": SERVER
+    "server": SERVER_PREFIX
 })
 
 def create_campaign(subject, preview_text, title, content):
     """Create a new campaign."""
-    campaign_info = {
-        "type": "regular",
+    try:
+        campaign_info = {
+            "type": "regular",
 
-        "recipients": {
-            "list_id": LIST_ID,
-            "segment_opts": {
-                "match": "all",
-                "conditions": [
-                    {
-                        "condition_type": "EmailAddress",
-                        "op": "is",
-                        "field": "merge0",
-                        "value": "yjn0710@bu.edu"
-                    }
-                ]
-            }
-        },
-        "settings": {
-            "subject_line": subject,
-            "preview_text": preview_text,
-            "title": title,
-            "from_name": "China Daily USA",
-        },
-    }
+            "recipients": {
+                "list_id": LIST_ID,
+                "segment_opts": {
+                    "match": "all",
+                    "conditions": [
+                        {
+                            "condition_type": "EmailAddress",
+                            "op": "is",
+                            "field": "merge0",
+                            "value": "yjn0710@bu.edu"
+                        }
+                    ]
+                }
+            },
+            "settings": {
+                "subject_line": subject,
+                "preview_text": preview_text,
+                "title": title,
+                "from_name": "China Daily USA",
+            },
+        }
 
-    campaign = CLIENT.campaigns.create(campaign_info)
-    campaign_id = campaign['id']
+        campaign = CLIENT.campaigns.create(campaign_info)
+        campaign_id = campaign['id']
 
-    CLIENT.campaigns.set_content(campaign_id, {"html": content})
+        CLIENT.campaigns.set_content(campaign_id, {"html": content})
 
-    return campaign_id
+        return campaign_id
+    except ApiClientError as error:
+        print(f"An error occurred: {error.status_code} - {error.text}")
+        return None
 
 
 def campaign_content(mainsection, featuredsection, before_content_html, after_content_html):
@@ -209,21 +214,21 @@ def main():
     # Print message for testing purposes
     print("HTML content has been generated and saved to test_campaign.html")
 
-    # subject = news['Subject']
-    # title = news['Subject']
-    # preview_text = create_preview_text(news['News'][0])
-    #
-    # campaign_id = create_campaign(
-    #     subject=subject,
-    #     preview_text=preview_text,
-    #     title=title,
-    #     content=html_content
-    # )
-    # print(f"Campaign created with ID: {campaign_id}")
-    #
-    # # Send a test email
-    # test_emails = ['kongsterrr@gmail.com']
-    # send_test_email(campaign_id, test_emails)
+    subject = news['Subject']
+    title = news['Subject']
+    preview_text = create_preview_text(news['News'][0])
+
+    campaign_id = create_campaign(
+        subject=subject,
+        preview_text=preview_text,
+        title=title,
+        content=html_content
+    )
+    print(f"Campaign created with ID: {campaign_id}")
+
+    # Send a test email
+    test_emails = ['kongsterrr@gmail.com']
+    send_test_email(campaign_id, test_emails)
     #
     #
     # print(f"Test email sent to {', '.join(test_emails)}")
