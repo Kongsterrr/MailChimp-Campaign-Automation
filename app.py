@@ -10,9 +10,14 @@ from News_Template.AfterContent import after_content_html
 from main import campaign_content, create_preview_text, create_campaign, send_test_email
 from dotenv import load_dotenv
 
+from dotenv import load_dotenv
+
 from flask import flash
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+
 UPLOAD_FOLDER = '/Users/Jack/Desktop/Newsletter/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -148,5 +153,4 @@ def success():
 
 
 if __name__ == "__main__":
-    app.secret_key = 'supersecretkey'
     app.run(debug=True)

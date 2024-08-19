@@ -10,6 +10,22 @@ def extract_hyperlinks(document):
     return hyperlinks
 
 
+def replace_quotes(text):
+    # Replace English single quotes with Chinese single ending quotes
+    text = text.replace("'", "’")
+
+    # Replace English double quotes with Chinese double quotes
+    parts = text.split('"')
+    for i in range(len(parts)):
+        if i % 2 == 0:
+            # Even indices: outside of quotes, do nothing
+            continue
+        else:
+            # Odd indices: inside of quotes, replace with Chinese quotes
+            parts[i] = '“' + parts[i] + '”'
+    return ''.join(parts)
+
+
 def parse_word_document(file_path):
     doc = Document(file_path)
     subject = ""
@@ -21,7 +37,7 @@ def parse_word_document(file_path):
     paragraphs = iter(doc.paragraphs)  # Create an iterator from the list of paragraphs
 
     for para in paragraphs:
-        text = para.text.strip()
+        text = replace_quotes(para.text.strip())
 
         if text.startswith("Email subject line"):
             subject = text.split(":", 1)[1].strip()
@@ -38,7 +54,7 @@ def parse_word_document(file_path):
             if current_section == "Main" or current_section == "Also_Featured":
                 title = text
                 content_paragraph = next(paragraphs)
-                content_text = content_paragraph.text.strip()
+                content_text = replace_quotes(content_paragraph.text.strip())
 
                 # Initialize text parts for link separation
                 text_before_link = ""

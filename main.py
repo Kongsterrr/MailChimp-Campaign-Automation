@@ -33,17 +33,17 @@ def create_campaign(subject, preview_text, title, content):
 
             "recipients": {
                 "list_id": LIST_ID,
-                "segment_opts": {
-                    "match": "all",
-                    "conditions": [
-                        {
-                            "condition_type": "EmailAddress",
-                            "op": "is",
-                            "field": "merge0",
-                            "value": "yjn0710@bu.edu"
-                        }
-                    ]
-                }
+                # "segment_opts": {
+                #     "match": "all",
+                #     "conditions": [
+                #         {
+                #             "condition_type": "EmailAddress",
+                #             "op": "is",
+                #             "field": "merge0",
+                #             "value": "yjn0710@bu.edu"
+                #         }
+                #     ]
+                # }
             },
             "settings": {
                 "subject_line": subject,
@@ -110,6 +110,16 @@ def schedule_campaign(campaign_id, send_time):
         print(f"An error occurred while scheduling the campaign: {error.text}")
         return None
 
+def replace_quotes(text):
+    parts = text.split('"')
+    for i in range(len(parts)):
+        if i % 2 == 0:
+            # For parts outside of quotes, do nothing
+            continue
+        else:
+            # For parts inside of quotes, replace with Chinese quotes
+            parts[i] = '“' + parts[i] + '”'
+    return ''.join(parts)
 
 def scrape_image_and_caption(content_link, img_index):
     def get_image_and_caption(soup):
@@ -130,6 +140,8 @@ def scrape_image_and_caption(content_link, img_index):
         figcaption_tag = soup.find('figcaption')
         if figcaption_tag:
             img_script = figcaption_tag.get_text(strip=True)
+
+            img_script = replace_quotes(img_script)
 
             # Attempt to find the image credit within square brackets
             last_bracket_index = img_script.rfind(']')
@@ -181,7 +193,7 @@ def scrape_image_and_caption(content_link, img_index):
 
 
 def main():
-    news = parse_word_document('/Users/Jack/desktop/newsletter1.docx')
+    news = parse_word_document('/Users/Jack/desktop/newsletter2.docx')
     news["Date"] = "August 14, 2024"
     news["News"][0]["Image_Index"] = 1
     news["News"][2]["Image_Index"] = 1
