@@ -29,7 +29,7 @@ def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient,
         msg['Subject'] = subject
 
         # Attach the body to the email
-        msg.attach(MIMEText(body.format(first_name=recipient['First Name']), 'plain'))
+        msg.attach(MIMEText(body.format(last_name=recipient['Last Name']), 'plain'))
 
         # Attach the PDF file if provided
         if pdf_path and pdf_filename:
@@ -40,7 +40,7 @@ def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient,
 
         # Send the email
         server.sendmail(sender_email, recipient['E-mail address'], msg.as_string())
-        print(f"Email sent to {recipient['First Name']} {recipient['Last Name']} at {recipient['E-mail address']}")
+        print(f"Email sent to {recipient['Last Name']} at {recipient['E-mail address']}")
 
         # Close the server connection
         server.quit()
@@ -96,13 +96,13 @@ if __name__ == "__main__":
 
     # Email content
     subject = 'Invitation to China Daily Vision China Forum on September 12, 2024'
-    body_template = '''Dear {first_name},
+    body_template = '''Dear Professor {last_name},
 
 Commemorating the 45th anniversary of China and the US establishing diplomatic relations, China Daily will host a special Vision China Forum in New York on September 12, 2024. You are cordially invited to attend the Forum to be held at the Asia Society. 
 
 This full-day event promises a wealth of insights and engaging discussions. For further details, please refer to the attached invitation letter. 
 
-Kindly confirm your attendance by replying to this email by August 19, 2024. To help us better accommodate our guests, please indicate whether you will be attending the morning session, the afternoon session, or the entire day. 
+Kindly confirm your attendance by replying to this email by August 29, 2024. To help us better accommodate our guests, please indicate whether you will be attending the morning session, the afternoon session, or the entire day. 
 
 We look forward to your participation in this meaningful event. 
 
@@ -116,7 +116,7 @@ China Daily USA
 1500 Broadway, Suite 2800, New York, NY 10036'''
 
     # CSV file path with recipient details
-    csv_file_path = '/Users/Jack/desktop/Book6.csv'
+    csv_file_path = '/Users/Jack/desktop/ProfessorList.csv'
 
     # Path to the PDF file you want to attach
     pdf_path = '/Users/Jack/desktop/invitationletter.pdf'
