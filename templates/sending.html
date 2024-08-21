@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .email-sending-container {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-sending-container h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .email-sending-container #messages {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .email-sending-container #messages p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        .email-sending-container #success-message {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .email-sending-container .sending {
+            color: #3498db;
+        }
+        .email-sending-container .success {
+            color: #2ecc71;
+        }
+    </style>
+
+    <div class="email-sending-container">
+        <h1 id="status-heading" class="sending">Sending Emails...</h1>
+        <div id="messages"></div>
+    </div>
+
+    <script type="text/javascript">
+        const eventSource = new EventSource("{{ url_for('send_bulk_emails') }}");
+        const messagesDiv = document.getElementById("messages");
+        const statusHeading = document.getElementById("status-heading");
+
+        eventSource.onmessage = function(event) {
+            const message = document.createElement("p");
+            message.textContent = event.data;
+            messagesDiv.appendChild(message);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        };
+
+        eventSource.onopen = function(event) {
+            statusHeading.textContent = "Sending Emails...";
+            statusHeading.className = "sending";
+        };
+
+        eventSource.onerror = function(event) {
+            eventSource.close();
+            statusHeading.textContent = "Email Sending Complete";
+            statusHeading.className = "success";
+            const successMessage = document.createElement("p");
+            successMessage.id = "success-message";
+            successMessage.textContent = "All emails have been successfully sent!";
+            successMessage.className = "success";
+            document.querySelector('.email-sending-container').appendChild(successMessage);
+        };
+    </script>
+
+{% endblock %}

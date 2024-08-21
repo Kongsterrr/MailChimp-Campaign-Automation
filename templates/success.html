@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Successful</title>
+{% extends "base.html" %}
+
+{% block content %}
     <style>
-        body {
+        .success-container {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
@@ -15,21 +12,21 @@
             align-items: center;
             height: 100vh;
         }
-        .container {
+        .success-container .content {
             text-align: center;
             background-color: white;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .container h1 {
+        .success-container h1 {
             color: #4CAF50;
         }
-        .container p {
+        .success-container p {
             font-size: 1.1em;
             color: #555;
         }
-        .container a {
+        .success-container a {
             display: inline-block;
             margin-top: 20px;
             text-decoration: none;
@@ -39,13 +36,14 @@
             border-radius: 5px;
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Success!</h1>
-        <p>Your Word document has been successfully uploaded and processed.</p>
-        <p>The campaign has been created. Please check your Mailchimp dashboard to review the details.</p>
-        <a href="https://mailchimp.com/" target="_blank">Go to Mailchimp Dashboard</a>
+
+   <div class="success-container">
+        <div class="content">
+            <h1>Success!</h1>
+            <p>Your Word document has been successfully uploaded and processed.</p>
+            <p>The campaign has been created. Please check your Mailchimp dashboard to review the details.</p>
+            <a href="https://mailchimp.com/" target="_blank">Go to Mailchimp Dashboard</a>
+        </div>
     </div>
-</body>
-</html>
+
+{% endblock %}

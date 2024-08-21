@@ -9,8 +9,9 @@ from News_Template.BeforeContent import before_content_html
 from News_Template.AfterContent import after_content_html
 from main import campaign_content, create_preview_text, create_campaign, send_test_email
 from dotenv import load_dotenv
+from CoreEmail import *
+from flask import Response
 
-from dotenv import load_dotenv
 
 from flask import flash
 load_dotenv()
@@ -25,7 +26,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/mailchimp', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # Get the uploaded file
@@ -151,6 +152,68 @@ def review():
 def success():
     return render_template('success.html')
 
+@app.route('/coremail', methods=['GET', 'POST'])
+def coremail():
+    form = EmailForm()
+    if form.validate_on_submit():
+        csv_file = form.csv_file.data
+        csv_filename = secure_filename(csv_file.filename)
+        csv_filepath = os.path.join(app.config['UPLOAD_FOLDER'], csv_filename)
+        csv_file.save(csv_filepath)
+
+        pdf_file = form.pdf_file.data
+        pdf_filepath = None
+        if pdf_file:
+            pdf_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(pdf_file.filename))
+            pdf_file.save(pdf_filepath)
+
+        session['csv_file_path'] = csv_filepath
+        session['pdf_file_path'] = pdf_filepath
+        session['pdf_filename'] = form.pdf_filename.data.strip() or (pdf_file.filename if pdf_file else None)
+        session['subject'] = form.subject.data
+        session['body_template'] = form.body.data
+        session['column_name'] = form.column_name.data
+
+        return redirect(url_for('send_emails'))
+
+    return render_template('coremail.html', form=form)
+
+
+@app.route('/send_emails', methods=['GET'])
+def send_emails():
+    csv_file_path = session.get('csv_file_path')
+    pdf_file_path = session.get('pdf_file_path')
+    pdf_filename = session.get('pdf_filename')
+
+    # Start the email sending process in the background
+    return render_template('sending.html')  # This will render the sending.html page
+
+@app.route('/send_bulk_emails', methods=['GET'])
+def send_bulk_emails():
+    csv_file_path = session.get('csv_file_path')
+    pdf_file_path = session.get('pdf_file_path')
+    pdf_filename = session.get('pdf_filename')
+    column_name = session.get('column_name')
+
+    return Response(
+        send_bulk_email(
+            smtp_server='103.253.239.168',
+            smtp_port=25,
+            sender_email='candiceyu@chinadailyusa.com',
+            sender_password='Yjn071022!',
+            csv_file_path=csv_file_path,
+            subject=session.get('subject'),
+            body_template=session.get('body_template'),
+            column_name=column_name,
+            pdf_path=pdf_file_path,
+            pdf_filename=pdf_filename
+        ),
+        mimetype='text/event-stream'
+    )
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
