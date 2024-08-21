@@ -6,60 +6,64 @@
 
 {% block content %}
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 50px;
+        }
         .home-container {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f4f4f4;
-    }
-    .home-container h1 {
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 50px;
-    }
-    .boxes {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-    }
-    .box {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        flex: 1;
-        text-align: center;
-    }
-    .box h2 {
-        color: #3498db;
-        margin-bottom: 20px;
-    }
-    .box a {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 20px;
-        color: #fff;
-        background-color: #3498db;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-    .box a:hover {
-        background-color: #2980b9;
-    }
+            text-align: center;
+            margin-top: 50px;
+        }
+        .boxes {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+        .box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 40%;
+            text-align: center;
+        }
+        .box img {
+            max-width: 300px;
+            height: 150px; /* Set a fixed height */
+            object-fit: contain; /* Ensure the image is scaled without distorting */
+            margin-bottom: 20px;
+        }
+        .box a {
+            display: block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #3498db;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .box a:hover {
+            background-color: #2980b9;
+        }
     </style>
 
     <div class="home-container">
         <h1>China Daily</h1>
         <div class="boxes">
             <div class="box">
-
+                <img src="{{ url_for('static', filename='images/mailchimp.png') }}" alt="MailChimp">
                 <a href="{{ url_for('upload_file') }}">Manage Campaigns</a>
             </div>
             <div class="box">
-
+                <img src="{{ url_for('static', filename='images/coremail.png') }}" alt="CoreMail">
                 <a href="{{ url_for('coremail') }}">Send Core Emails</a>
             </div>
         </div>
