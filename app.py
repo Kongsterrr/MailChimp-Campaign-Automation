@@ -1,19 +1,21 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, flash, current_app
 from werkzeug.utils import secure_filename
 import os
 from ParseWord import parse_word_document
-from main import scrape_image_and_caption
+from mailchimp import scrape_image_and_caption
 from News_Template.MainContent import MainSection
 from News_Template.AlsoFeatured import AlsoFeatured
 from News_Template.BeforeContent import before_content_html
 from News_Template.AfterContent import after_content_html
-from main import campaign_content, create_preview_text, create_campaign, send_test_email
+from mailchimp import campaign_content, create_preview_text, create_campaign, send_test_email
 from dotenv import load_dotenv
 from CoreEmail import *
 from flask import Response
+import datetime
+from login import *
+from flask_jwt_extended import unset_jwt_cookies, get_jwt_identity, get_jwt, jwt_required
+import jwt
 
-
-from flask import flash
 load_dotenv()
 
 app = Flask(__name__)
@@ -21,12 +23,33 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 UPLOAD_FOLDER = '/Users/Jack/Desktop/Newsletter/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')  # Change this!
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+JWT = JWTManager(app)
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+
+@app.context_processor
+def inject_user_status():
+    user_logged_in = False
+    jwt_token = request.cookies.get('access_token_cookie')  # The name of your cookie storing the JWT
+
+    if jwt_token:
+        try:
+            # Decode the JWT using the secret key and verify its authenticity
+            decoded = jwt.decode(jwt_token, current_app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
+            user_logged_in = decoded is not None
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, jwt.DecodeError):
+            user_logged_in = False
+
+    return dict(user_logged_in=user_logged_in)
+
 @app.route('/mailchimp', methods=['GET', 'POST'])
+@login_required
 def upload_file():
     if request.method == 'POST':
         # Get the uploaded file
@@ -52,6 +75,7 @@ def upload_file():
 
 
 @app.route('/select_images', methods=['GET', 'POST'])
+@login_required
 def select_images():
     news = session.get('news_data')
     missing_images = session.pop('missing_images', False)
@@ -105,6 +129,7 @@ def select_images():
 
 
 @app.route('/review', methods=['GET', 'POST'])
+@login_required
 def review():
     news = session.get('news_data')
     if request.method == 'POST':
@@ -149,10 +174,13 @@ def review():
     return render_template('review.html', news=news, enumerate = enumerate)
 
 @app.route('/success')
+@login_required
 def success():
     return render_template('success.html')
 
+
 @app.route('/coremail', methods=['GET', 'POST'])
+@login_required
 def coremail():
     form = EmailForm()
     if form.validate_on_submit():
@@ -175,11 +203,11 @@ def coremail():
         session['column_name'] = form.column_name.data
 
         return redirect(url_for('send_emails'))
-
     return render_template('coremail.html', form=form)
 
 
 @app.route('/send_emails', methods=['GET'])
+@login_required
 def send_emails():
     csv_file_path = session.get('csv_file_path')
     pdf_file_path = session.get('pdf_file_path')
@@ -189,6 +217,7 @@ def send_emails():
     return render_template('sending.html')  # This will render the sending.html page
 
 @app.route('/send_bulk_emails', methods=['GET'])
+@login_required
 def send_bulk_emails():
     csv_file_path = session.get('csv_file_path')
     pdf_file_path = session.get('pdf_file_path')
@@ -216,9 +245,34 @@ def send_bulk_emails():
         mimetype='text/event-stream'
     )
 
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        # Check if the credentials are correct
+        secure_username = os.getenv('USERNAME')
+        secure_password = os.getenv('PASSWORD')
+        result = authenticate(username, password, secure_username, secure_password)
+        if result:
+            return result
+        else:
+            flash('Incorrect username or password. Please try again.', 'error')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    resp = make_response(redirect(url_for('login')))
+    unset_jwt_cookies(resp)
+    return resp
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

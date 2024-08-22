@@ -91,17 +91,12 @@ def parse_word_document(file_path):
     news = {
         "Subject": subject,
         "News": main_news + also_featured_news
-        # "Also_Featured": also_featured_news
     }
 
     return news
 
 
 
-# # Example usage
-# file_path = '/Users/Jack/desktop/newsletter1.docx'
-# parsed_news = parse_word_document(file_path)
-# print(parsed_news)
 
 
 
