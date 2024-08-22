@@ -195,12 +195,17 @@ def send_bulk_emails():
     pdf_filename = session.get('pdf_filename')
     column_name = session.get('column_name')
 
+    smtp_server = os.getenv('SMTP_SERVER')
+    smtp_port = os.getenv('SMTP_PORT')
+    sender_email = os.getenv('SENDER_EMAIL')
+    sender_password = os.getenv('SENDER_PASSWORD')
+
     return Response(
         send_bulk_email(
-            smtp_server='103.253.239.168',
-            smtp_port=25,
-            sender_email='candiceyu@chinadailyusa.com',
-            sender_password='Yjn071022!',
+            smtp_server=smtp_server,
+            smtp_port=smtp_port,
+            sender_email=sender_email,
+            sender_password=sender_password,
             csv_file_path=csv_file_path,
             subject=session.get('subject'),
             body_template=session.get('body_template'),
