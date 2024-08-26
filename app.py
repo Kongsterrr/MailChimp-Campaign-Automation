@@ -95,7 +95,7 @@ def select_images():
         for item in news['News']:
             if 'Image_Index' in item:
                 try:
-                    img_index = int(float(item['Image_Index'])) - 1
+                    img_index = int(float(item['Image_Index']))
                     img_src, img_script, img_credit = scrape_image_and_caption(item['Content_Link'], img_index)
                     item['Image'] = img_src
                     item['ImageScript'] = img_script
@@ -228,6 +228,8 @@ def send_bulk_emails():
     smtp_port = os.getenv('SMTP_PORT')
     sender_email = os.getenv('SENDER_EMAIL')
     sender_password = os.getenv('SENDER_PASSWORD')
+    # smtp_username = os.getenv('SMTP_USERNAME')
+    # smtp_password = os.getenv('SMTP_PASSWORD')
 
     return Response(
         send_bulk_email(
@@ -235,6 +237,8 @@ def send_bulk_emails():
             smtp_port=smtp_port,
             sender_email=sender_email,
             sender_password=sender_password,
+            # sender_email=sender_email,
+            # sender_password=sender_password,
             csv_file_path=csv_file_path,
             subject=session.get('subject'),
             body_template=session.get('body_template'),

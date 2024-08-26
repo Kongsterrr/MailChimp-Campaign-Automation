@@ -10,6 +10,7 @@ import pytz
 from ParseWord import parse_word_document
 from dotenv import load_dotenv
 import os
+import re
 
 
 load_dotenv()
@@ -121,6 +122,17 @@ def replace_quotes(text):
             parts[i] = '“' + parts[i] + '”'
     return ''.join(parts)
 
+
+def replace_img_index(content_link, img_index):
+    # Check if the link ends with _number.html and replace it
+    if re.search(r'_\d+\.html$', content_link):
+        content_link = re.sub(r'_\d+\.html$', f'_{img_index}.html', content_link)
+    else:
+        # If it ends with .html, replace it with _img_index.html
+        content_link = content_link.replace('.html', f'_{img_index}.html')
+
+    return content_link
+
 def scrape_image_and_caption(content_link, img_index):
     def get_image_and_caption(soup):
         content_div = soup.find('div', id='Content')
@@ -173,8 +185,9 @@ def scrape_image_and_caption(content_link, img_index):
     try:
         # Adjust the content link if img_index is greater than 1
         if img_index > 1:
-            content_link = content_link.replace('.html', f'_{img_index}.html')
-
+            # content_link = content_link.replace('.html', f'_{img_index}.html')
+            content_link = replace_img_index(content_link, img_index)
+        print(content_link)
         # Send a GET request to the URL
         response = requests.get(content_link)
         response.raise_for_status()  # Raise an exception for HTTP errors

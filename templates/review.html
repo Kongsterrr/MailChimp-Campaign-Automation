@@ -14,6 +14,7 @@
         .review-news-container h1 {
             color: #2c3e50;
             text-align: center;
+            font-size: 24px;
         }
         .review-news-container form {
             background-color: #fff;
@@ -26,9 +27,13 @@
             margin-top: 30px;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
+            font-size: 20px;
+            word-wrap: break-word;
         }
         .review-news-container p {
             margin: 10px 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .review-news-container button {
             background-color: #3498db;
@@ -40,6 +45,8 @@
             font-size: 16px;
             display: block;
             margin: 20px auto 0;
+            width: 100%;
+            max-width: 200px;
         }
         .review-news-container button:hover {
             background-color: #2980b9;
@@ -64,6 +71,20 @@
             border-color: #3498db;
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
         }
+        @media (max-width: 600px) {
+            .review-news-container {
+                padding: 10px;
+            }
+            .review-news-container h1 {
+                font-size: 20px;
+            }
+            .review-news-container h2 {
+                font-size: 18px;
+            }
+            .review-news-container form {
+                padding: 15px;
+            }
+        }
     </style>
 
     <div class="review-news-container">
@@ -78,10 +99,9 @@
                 <p><strong>Image Source:</strong> {{ news_item.Image }}</p>
                 <p><strong>Image Script:</strong> {{ news_item.ImageScript }}</p>
                 <label for="image_credit_{{ index }}"><strong>Image Credit:</strong></label>
-                <input type="text" id="image_credit_{{ index }}" name="image_credit_{{ index }}" value="{{ news_item.ImageCredit }}"><br><br>
+                <input type="text" id="image_credit_{{ index }}" name="image_credit_{{ index }}" value="{{ news_item.ImageCredit }}">
             {% endfor %}
             <button type="submit">Finalize</button>
         </form>
     </div>
-
 {% endblock %}
