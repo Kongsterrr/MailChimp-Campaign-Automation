@@ -7,6 +7,8 @@ import time
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, FileField
 from wtforms.validators import DataRequired
+from flask_wtf.file import MultipleFileField
+
 
 
 class EmailForm(FlaskForm):
@@ -15,7 +17,8 @@ class EmailForm(FlaskForm):
     csv_file = FileField('CSV File', validators=[DataRequired()])
     column_name = StringField('Column Name', validators=[DataRequired()])
     pdf_file = FileField('PDF File (Optional)')
-    pdf_filename = StringField('PDF Filename (Optional)')
+    # pdf_filename = StringField('PDF Filename (Optional)')
+    pdf_files = MultipleFileField('Attach Files (Optional)')
     submit = SubmitField('Send Emails')
 
 def read_recipients(csv_file_path):
@@ -63,7 +66,9 @@ def read_recipients(csv_file_path):
 #     except Exception as e:
 #         print(f"Failed to send email to {email}: {e}")
 
-def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient, subject, body, column_name, pdf_path=None, pdf_filename=None):
+# def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient, subject, body, column_name, pdf_path=None, pdf_filename=None):
+def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient, subject, body, column_name,
+               attachments=None):
     email = recipient.get('E-mail address') or recipient.get('Email') or recipient.get('email')
     try:
         # Set up the server (no encryption on port 25)
@@ -79,14 +84,29 @@ def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient,
 
         # Attach the body to the email
         name = recipient.get(column_name)
-        msg.attach(MIMEText(body.format(name=name), 'plain'))
 
+        # for html only
+        body = body.format(name=name).replace("Vision China", "<i>Vision China</i>")
+
+        # un comment this one when using normally
+        # msg.attach(MIMEText(body.format(name=name), 'plain'))
+
+        # for html only
+        msg.attach(MIMEText(body, 'html'))
         # Attach the PDF file if provided
-        if pdf_path and pdf_filename:
-            with open(pdf_path, 'rb') as pdf_file:
-                pdf_attachment = MIMEApplication(pdf_file.read(), _subtype='pdf')
-                pdf_attachment.add_header('Content-Disposition', 'attachment', filename=pdf_filename)
-                msg.attach(pdf_attachment)
+        # if pdf_path and pdf_filename:
+        #     with open(pdf_path, 'rb') as pdf_file:
+        #         pdf_attachment = MIMEApplication(pdf_file.read(), _subtype='pdf')
+        #         pdf_attachment.add_header('Content-Disposition', 'attachment', filename=pdf_filename)
+        #         msg.attach(pdf_attachment)
+
+        # Attach multiple files if provided
+        if attachments:
+            for file_path, file_name in attachments:
+                with open(file_path, 'rb') as file_content:
+                    attachment = MIMEApplication(file_content.read())
+                    attachment.add_header('Content-Disposition', 'attachment', filename=file_name)
+                    msg.attach(attachment)
 
         # Send the email
         server.sendmail(sender_email, email, msg.as_string())
@@ -99,7 +119,10 @@ def send_email(smtp_server, smtp_port, sender_email, sender_password, recipient,
         print(f"Failed to send email to {email}: {e}")
 
 
-def send_bulk_email(smtp_server, smtp_port, sender_email, sender_password, csv_file_path, subject, body_template, column_name, pdf_path=None, pdf_filename=None):
+# def send_bulk_email(smtp_server, smtp_port, sender_email, sender_password, csv_file_path, subject, body_template, column_name, pdf_path=None, pdf_filename=None):
+def send_bulk_email(smtp_server, smtp_port, sender_email, sender_password, csv_file_path, subject, body_template,
+                    column_name, attachments=None):
+
     """Send bulk emails to recipients listed in a CSV file."""
     recipients = read_recipients(csv_file_path)
     print(recipients[0].keys())
@@ -117,8 +140,9 @@ def send_bulk_email(smtp_server, smtp_port, sender_email, sender_password, csv_f
                 subject=subject,
                 body=body_template,
                 column_name=column_name,
-                pdf_path=pdf_path,
-                pdf_filename=pdf_filename
+                attachments=attachments
+                # pdf_path=pdf_path,
+                # pdf_filename=pdf_filename
             )
 
             message = f"Email sent to {name} at {email}"
@@ -138,8 +162,9 @@ def send_bulk_email(smtp_server, smtp_port, sender_email, sender_password, csv_f
                 subject=subject,
                 body=body_template,
                 column_name=column_name,
-                pdf_path=pdf_path,
-                pdf_filename=pdf_filename
+                attachments=attachments
+                # pdf_path=pdf_path,
+                # pdf_filename=pdf_filename
             )
             message = f"Email sent to {name} at {email}"
             yield f"data: {message}\n\n"

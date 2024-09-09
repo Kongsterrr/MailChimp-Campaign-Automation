@@ -189,15 +189,29 @@ def coremail():
         csv_filepath = os.path.join(app.config['UPLOAD_FOLDER'], csv_filename)
         csv_file.save(csv_filepath)
 
-        pdf_file = form.pdf_file.data
-        pdf_filepath = None
-        if pdf_file:
-            pdf_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(pdf_file.filename))
-            pdf_file.save(pdf_filepath)
+        # pdf_file = form.pdf_file.data
+        # pdf_filepath = None
+        # if pdf_file:
+        #     pdf_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(pdf_file.filename))
+        #     pdf_file.save(pdf_filepath)
+
+        # attachments = form.pdf_files.data if form.pdf_files.data else None
+
+        attachments = []
+        if form.pdf_files.data:
+            for pdf_file in form.pdf_files.data:
+                # pdf_filename = secure_filename(pdf_file.filename)
+                pdf_filename = pdf_file.filename
+
+                pdf_filepath = os.path.join(app.config['UPLOAD_FOLDER'], pdf_filename)
+                pdf_file.save(pdf_filepath)
+                attachments.append((pdf_filepath, pdf_filename))
 
         session['csv_file_path'] = csv_filepath
-        session['pdf_file_path'] = pdf_filepath
-        session['pdf_filename'] = form.pdf_filename.data.strip() or (pdf_file.filename if pdf_file else None)
+        session['attachments'] = attachments
+
+        # session['pdf_file_path'] = pdf_filepath
+        # session['pdf_filename'] = form.pdf_filename.data.strip() or (pdf_file.filename if pdf_file else None)
         session['subject'] = form.subject.data
         session['body_template'] = form.body.data
         session['column_name'] = form.column_name.data
@@ -211,7 +225,7 @@ def coremail():
 def send_emails():
     csv_file_path = session.get('csv_file_path')
     pdf_file_path = session.get('pdf_file_path')
-    pdf_filename = session.get('pdf_filename')
+    # pdf_filename = session.get('pdf_filename')
 
     # Start the email sending process in the background
     return render_template('sending.html')  # This will render the sending.html page
@@ -220,8 +234,10 @@ def send_emails():
 @login_required
 def send_bulk_emails():
     csv_file_path = session.get('csv_file_path')
-    pdf_file_path = session.get('pdf_file_path')
-    pdf_filename = session.get('pdf_filename')
+    # pdf_file_path = session.get('pdf_file_path')
+    # pdf_filename = session.get('pdf_filename')
+    attachments = session.get('attachments')
+
     column_name = session.get('column_name')
 
     smtp_server = os.getenv('SMTP_SERVER')
@@ -243,8 +259,9 @@ def send_bulk_emails():
             subject=session.get('subject'),
             body_template=session.get('body_template'),
             column_name=column_name,
-            pdf_path=pdf_file_path,
-            pdf_filename=pdf_filename
+            attachments=attachments
+            # pdf_path=pdf_file_path,
+            # pdf_filename=pdf_filename
         ),
         mimetype='text/event-stream'
     )
