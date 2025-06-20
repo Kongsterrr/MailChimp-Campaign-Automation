@@ -1,6 +1,3 @@
-import csv
-import pandas as pd
-
 def MainSection(news):
 
     html_content = ""
