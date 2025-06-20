@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="0663bdae-1ee4-44af-8764-b025364aafc0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoreEmail.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoreEmail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/News_Template/AlsoFeatured.py" beforeDir="false" afterPath="$PROJECT_DIR$/News_Template/AlsoFeatured.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/News_Template/MainContent.py" beforeDir="false" afterPath="$PROJECT_DIR$/News_Template/MainContent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coremail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coremail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/select_images.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/select_images.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_campaign.html" beforeDir="false" afterPath="$PROJECT_DIR$/test_campaign.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,14 +39,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "contexts": [
+  <component name="KubernetesApiProvider">{
+  &quot;contexts&quot;: [
     {
-      "name": "arn:aws:eks:us-east-2:891377383960:cluster/forum-arm-cluster"
+      &quot;name&quot;: &quot;arn:aws:eks:us-east-2:891377383960:cluster/forum-arm-cluster&quot;
     }
   ],
-  "isMigrated": true
-}]]></component>
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="KubernetesSettings">
     <option name="contextName" value="arn:aws:eks:us-east-2:891377383960:cluster/forum-arm-cluster" />
   </component>
@@ -63,33 +64,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Flask server.Flask (app.py).executor": "Run",
-    "Flask server.Newsletter.executor": "Run",
-    "JavaScript Debug.test_campaign.html.executor": "Run",
-    "Python.CoreEmail.executor": "Run",
-    "Python.MainContent.executor": "Run",
-    "Python.Newsletter.executor": "Run",
-    "Python.ParseWord.executor": "Run",
-    "Python.app.executor": "Run",
-    "Python.mailchimp.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.test.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/Jack/Desktop/Newsletter",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Flask server.Newsletter.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.test_campaign.html.executor&quot;: &quot;Run&quot;,
+    &quot;Python.CoreEmail.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MainContent.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Newsletter.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ParseWord.executor&quot;: &quot;Run&quot;,
+    &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mailchimp.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/Jack/Desktop/Newsletter&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/static/images" />
@@ -97,7 +98,7 @@
       <recent name="$PROJECT_DIR$/News_Template" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Flask server.Newsletter">
     <configuration name="Newsletter" type="PythonConfigurationType" factoryName="Python">
       <module name="Newsletter" />
       <option name="ENV_FILES" value="" />
@@ -129,7 +130,7 @@
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -157,6 +158,19 @@
       <workItem from="1723493794958" duration="57989000" />
       <workItem from="1723749114941" duration="552000" />
       <workItem from="1723749677958" duration="88801000" />
+      <workItem from="1725898362102" duration="2777000" />
+      <workItem from="1727621302016" duration="1171000" />
+      <workItem from="1728025879155" duration="102000" />
+      <workItem from="1728176282877" duration="865000" />
+      <workItem from="1730064378901" duration="606000" />
+      <workItem from="1730679787675" duration="1145000" />
+      <workItem from="1731274855999" duration="674000" />
+      <workItem from="1731881363799" duration="608000" />
+      <workItem from="1740352302513" duration="22218000" />
+      <workItem from="1743726954803" duration="532000" />
+      <workItem from="1743727496464" duration="4786000" />
+      <workItem from="1744847800745" duration="14734000" />
+      <workItem from="1748227249261" duration="22378000" />
     </task>
     <servers />
   </component>
@@ -166,7 +180,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Newsletter$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1725648170776" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Newsletter$mailchimp.coverage" NAME="mailchimp Coverage Results" MODIFIED="1724642257478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Newsletter$Newsletter.coverage" NAME="Newsletter Coverage Results" MODIFIED="1723750465806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Newsletter$Newsletter.coverage" NAME="Newsletter Coverage Results" MODIFIED="1750392785615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Newsletter$ParseWord.coverage" NAME="ParseWord Coverage Results" MODIFIED="1723671891074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Newsletter$CoreEmail.coverage" NAME="CoreEmail Coverage Results" MODIFIED="1725647542177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Newsletter$test.coverage" NAME="test Coverage Results" MODIFIED="1723691668923" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

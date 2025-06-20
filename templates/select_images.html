@@ -52,6 +52,17 @@
         .image-selection-container button:hover {
             background-color: #2980b9;
         }
+
+        .image-selection-container button:hover {
+           background-color: #2980b9;
+       }
+       .layout-selection {
+           margin-bottom: 20px;
+       }
+       .image-placement-selection {
+           margin-top: 10px;
+       }
+
     </style>
 
     <div class="image-selection-container">
@@ -65,9 +76,53 @@
                 <h2>{{ news_item.Title }}</h2>
                 <label for="image_index_{{ index }}">Image Page:</label>
                 <input type="number" id="image_index_{{ index }}" name="image_index_{{ index }}" min="1" step="1">
+
+                <!-- New: Layout Selection -->
+                <div class="layout-selection">
+                    <span>Select Layout:</span>
+                    <label>
+                        <input type="radio" name="layout_{{ index }}" value="vertical" checked>
+                        Vertical
+                    </label>
+                    <label>
+                        <input type="radio" name="layout_{{ index }}" value="horizontal">
+                        Horizontal
+                    </label>
+                </div>
+
+                <!-- Image Placement Selection (only shown if horizontal is selected) -->
+               <div class="image-placement-selection" id="image_placement_{{ index }}" style="display: none;">
+                   <span>Image Placement:</span>
+                   <label>
+                       <input type="radio" name="image_placement_{{ index }}" value="left" checked>
+                       Image on Left
+                   </label>
+                   <label>
+                       <input type="radio" name="image_placement_{{ index }}" value="right">
+                       Image on Right
+                   </label>
+               </div>
+
+                <hr>
+
             {% endfor %}
             <button type="submit">Submit Selections</button>
         </form>
     </div>
+
+    <script>
+       // Show/hide image placement options based on layout selection
+       document.querySelectorAll('input[type="radio"][name^="layout_"]').forEach(radio => {
+           radio.addEventListener('change', function() {
+               const index = this.name.split('_')[1];
+               const placementDiv = document.getElementById(`image_placement_${index}`);
+               if (this.value === 'horizontal') {
+                   placementDiv.style.display = 'block';
+               } else {
+                   placementDiv.style.display = 'none';
+               }
+           });
+       });
+   </script>
 
 {% endblock %}

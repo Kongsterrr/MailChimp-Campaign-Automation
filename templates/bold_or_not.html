@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Choose divider weight</h2>
+  <form method="POST">
+    <label>
+      <input type="radio" name="divider_style" value="bold" checked>
+      Bold line (default)
+    </label><br>
+    <label>
+      <input type="radio" name="divider_style" value="normal">
+      Thin line
+    </label><br><br>
+    <button class="btn btn-primary" type="submit">Continue</button>
+  </form>
+{% endblock %}

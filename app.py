@@ -62,17 +62,35 @@ def upload_file():
             # Parse the uploaded document
             news = parse_word_document(filepath)
 
+
             # Get the date input
             date = request.form['date']
             news["Date"] = date
 
             # Save the news data temporarily (could use session or database)
             session['news_data'] = news
+            session['uploaded_doc'] = filepath
 
-            return redirect(url_for('select_images'))
+            return redirect(url_for('bold_or_not'))
 
     return render_template('upload.html')
 
+
+@app.route('/boldOrNot', methods=['GET', 'POST'])
+@login_required
+def bold_or_not():
+    news = session.get('news_data')
+    if not news:
+        return redirect(url_for('upload_file'))
+
+    if request.method == 'POST':
+        divider_choice = request.form.get('divider_style', 'bold')  # default bold
+        # Persist the choice inside the same news object so MainSection can see it
+        news['DividerBold'] = divider_choice == 'bold'
+        session['news_data'] = news               # write back
+        return redirect(url_for('select_images'))  # continue normal flow
+
+    return render_template('bold_or_not.html')
 
 @app.route('/select_images', methods=['GET', 'POST'])
 @login_required
@@ -90,6 +108,14 @@ def select_images():
             img_index = request.form.get(f'image_index_{index}')
             if img_index:
                 news["News"][index]["Image_Index"] = int(img_index)
+            # Get the layout selection (default to vertical if not provided)
+            layout_option = request.form.get(f'layout_{index}', 'vertical')
+            news["News"][index]["Layout"] = layout_option
+
+            # Get the image placement selection (only applicable for horizontal layout)
+            if layout_option == 'horizontal':
+                image_placement = request.form.get(f'image_placement_{index}', 'left')
+                news["News"][index]["ImagePlacement"] = image_placement
 
 
         for item in news['News']:
@@ -132,42 +158,51 @@ def select_images():
 @login_required
 def review():
     news = session.get('news_data')
+
+    divider_bold = news.get('DividerBold', True)
+
     if request.method == 'POST':
-        for index, item in enumerate(news['News']):
-            # Handle updated image credit
-            new_image_credit = request.form.get(f'image_credit_{index}')
-            if new_image_credit:
-                item['ImageCredit'] = new_image_credit
+        try:
+            for index, item in enumerate(news['News']):
+                # Handle updated image credit
+                new_image_credit = request.form.get(f'image_credit_{index}')
+                if new_image_credit:
+                    item['ImageCredit'] = new_image_credit
 
-        main_section = MainSection(news)
-        also_featured_section = AlsoFeatured(news)
-        html_content = campaign_content(main_section, also_featured_section, before_content_html, after_content_html)
+            main_section = MainSection(news)
+            also_featured_section = AlsoFeatured(news) if divider_bold else ""
+            html_content = campaign_content(main_section, also_featured_section, before_content_html, after_content_html)
 
-        # Store the generated HTML content into a file
-        with open('test_campaign.html', 'w') as file:
-            file.write(html_content)
+            # Store the generated HTML content into a file
+            with open('test_campaign.html', 'w') as file:
+                file.write(html_content)
 
-        # Print message for testing purposes
-        print("HTML content has been generated and saved to test_campaign.html")
+            # Print message for testing purposes
+            print("HTML content has been generated and saved to test_campaign.html")
 
-        subject = news['Subject']
-        title = news['Subject']
-        preview_text = create_preview_text(news['News'][0])
+            subject = news['Subject']
+            title = news['Subject']
+            preview_text = create_preview_text(news['News'][0])
 
-        campaign_id = create_campaign(
-            subject=subject,
-            preview_text=preview_text,
-            title=title,
-            content=html_content
-        )
-        print(f"Campaign created with ID: {campaign_id}")
+            campaign_id = create_campaign(
+                subject=subject,
+                preview_text=preview_text,
+                title=title,
+                content=html_content
+            )
+            print(f"Campaign created with ID: {campaign_id}")
 
-        # Send a test email
-        test_emails = ['kongsterrr@gmail.com']
-        send_test_email(campaign_id, test_emails)
+            # Send a test email
+            test_emails = ['kongsterrr@gmail.com']
+            send_test_email(campaign_id, test_emails)
 
 
-        print(f"Test email sent to {', '.join(test_emails)}")
+            print(f"Test email sent to {', '.join(test_emails)}")
+        finally:
+            uploaded_doc = session.pop('uploaded_doc', None)
+            if uploaded_doc and os.path.exists(uploaded_doc):
+                os.remove(uploaded_doc)
+
 
         return redirect(url_for('success'))
 
