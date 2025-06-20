@@ -220,15 +220,12 @@ def MainSection(news):
                 )
             else:
                 main_content_line_html = (
-                    f'<tr><td style="background-color:transparent;padding-top:6px;'
-                    f'padding-bottom:6px;padding-right:50px;padding-left:50px" valign="top" '
-                    f'class="mceDividerBlockContainer" id="blockContainerId-{i}"><table align="center" '
-                    f'border="0" cellpadding="0" cellspacing="0" width="100%" '
-                    f'style="background-color:transparent;width:100%" role="presentation" '
-                    f'class="mceDividerContainer" data-block-id="{i}"><tbody><tr><td '
-                    f'style="min-width:100%;border-top-width:1px;border-top-style:solid;'
-                    f'border-top-color:#cdc6c1;line-height:0;font-size:0" valign="top" '
-                    f'class="mceDividerBlock">&nbsp;</td></tr></tbody></table></td></tr>'
+                    f'<tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:50px;padding-left:50px" '
+                    f'class="mceBlockContainer" valign="top">'
+                    f'<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" '
+                    f'role="presentation" class="mceDividerContainer" data-block-id="100">'
+                    f'<tbody><tr><td style="min-width:100%;border-top-width:1px;border-top-style:solid;border-top-color:#cdc6c1" class="mceDividerBlock" '
+                    f'valign="top"></td></tr></tbody></table></td></tr>'
                 )
 
 
