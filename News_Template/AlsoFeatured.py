@@ -1,4 +1,3 @@
-import numpy as np
 
 def AlsoFeatured(news):
     html_content=""
