@@ -8,21 +8,24 @@ from News_Template.AlsoFeatured import AlsoFeatured
 from News_Template.BeforeContent import before_content_html
 from News_Template.AfterContent import after_content_html
 from mailchimp import campaign_content, create_preview_text, create_campaign, send_test_email
-from dotenv import load_dotenv
 from CoreEmail import *
 from flask import Response
-import datetime
 from login import *
 from flask_jwt_extended import unset_jwt_cookies, get_jwt_identity, get_jwt, jwt_required
 import jwt
+from pathlib import Path
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-UPLOAD_FOLDER = '/Users/Jack/Desktop/Newsletter/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+BASE_DIR = Path(__file__).resolve().parent
+UPLOAD_FOLDER = Path(os.getenv("UPLOAD_DIR", BASE_DIR / "uploads"))
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+
+app.config["UPLOAD_FOLDER"] = str(UPLOAD_FOLDER)
+
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')  # Change this!
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
