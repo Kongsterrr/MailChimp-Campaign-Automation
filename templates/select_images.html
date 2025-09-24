@@ -72,6 +72,25 @@
         {% endif %}
 
         <form method="post">
+
+            <fieldset style="border:1px solid #ddd;padding:16px;border-radius:8px;margin-bottom:24px;background:#fff">
+                <legend style="padding:0 8px;color:#2c3e50;font-weight:bold">Ads placement</legend>
+                <label for="ads_position">Insert ad after story #</label>
+                <input
+                  type="number"
+                  id="ads_position"
+                  name="ads_position"
+                  min="1"
+                  step="1"
+                  value="1"
+                  style="width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:4px;box-sizing:border-box"
+                />
+                <p style="margin:8px 0 0;color:#666;font-size:13px">
+                  Example: 1 = between the 1st and 2nd stories. If the number is larger than the total stories, the ad will be placed at the end.
+                </p>
+              </fieldset>
+
+
             {% for index, news_item in enumerate(news.News) %}
                 <h2>{{ news_item.Title }}</h2>
                 <label for="image_index_{{ index }}">Image Page:</label>

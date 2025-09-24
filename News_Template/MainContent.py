@@ -24,6 +24,14 @@ def MainSection(news):
     main_news = [item for item in news['News'] if item.get("Section") == "Main"]
     divider_bold = news.get("DividerBold", True)
 
+    # NEW: read desired placement (1-based = after Nth story)
+    ads_after_n = int(news.get("AdsPlacement", 1))
+    # convert to zero-based index (inject after item with index inject_after_idx)
+    inject_after_idx = max(0, ads_after_n - 1)
+    if main_news:
+        inject_after_idx = min(inject_after_idx, len(main_news) - 1)
+
+
     for i, item in enumerate(main_news):
         layout = item.get("Layout", "vertical")
         image_placement = item.get("ImagePlacement", "left")
@@ -234,13 +242,13 @@ def MainSection(news):
         )
 
         # 🔹 Insert the injected block as the 2nd item (right after the first main_news)
-        if i == 0:
-            if len(main_news) > 1:
-                # first article + divider, then injected block + divider (so the 2nd article follows cleanly)
-                html_content += final_html + main_content_line_html + injected_second_block + main_content_line_html
-            else:
-                # only one main item: first article + divider, injected block, then end section line
+        if i == inject_after_idx:
+            if len(main_news) == 1 or i == len(main_news) - 1:
+                # injecting after the last (or only) story
                 html_content += final_html + main_content_line_html + injected_second_block + end_section_line_html
+            else:
+                # injecting in the middle
+                html_content += final_html + main_content_line_html + injected_second_block + main_content_line_html
             continue
 
         # default behavior for the rest

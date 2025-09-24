@@ -106,6 +106,19 @@ def select_images():
     if request.method == 'POST':
         missing_images = False
 
+        try:
+            ads_position = int(request.form.get('ads_position', '1'))
+        except ValueError:
+            ads_position = 1
+        if ads_position < 1:
+            ads_position = 1
+
+            # stash into news so MainSection can use it
+        news['AdsPlacement'] = ads_position
+
+
+
+
         # Process the selected images and indexes
         for index, item in enumerate(news["News"]):
             img_index = request.form.get(f'image_index_{index}')
