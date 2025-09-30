@@ -24,12 +24,22 @@ def MainSection(news):
     main_news = [item for item in news['News'] if item.get("Section") == "Main"]
     divider_bold = news.get("DividerBold", True)
 
-    # NEW: read desired placement (1-based = after Nth story)
-    ads_after_n = int(news.get("AdsPlacement", 1))
-    # convert to zero-based index (inject after item with index inject_after_idx)
-    inject_after_idx = max(0, ads_after_n - 1)
-    if main_news:
+    # NEW: ads toggle + placement
+    ads_enabled = bool(news.get("AdsEnabled"))
+    ads_after_n = int(news.get("AdsPlacement", 1)) if ads_enabled else None
+
+    # Compute where to inject (0-based index after which the ad appears)
+    inject_after_idx = None
+    if ads_enabled and main_news:
+        inject_after_idx = max(0, ads_after_n - 1)
         inject_after_idx = min(inject_after_idx, len(main_news) - 1)
+
+    # # NEW: read desired placement (1-based = after Nth story)
+    # ads_after_n = int(news.get("AdsPlacement", 1))
+    # # convert to zero-based index (inject after item with index inject_after_idx)
+    # inject_after_idx = max(0, ads_after_n - 1)
+    # if main_news:
+    #     inject_after_idx = min(inject_after_idx, len(main_news) - 1)
 
 
     for i, item in enumerate(main_news):
@@ -242,12 +252,12 @@ def MainSection(news):
         )
 
         # 🔹 Insert the injected block as the 2nd item (right after the first main_news)
-        if i == inject_after_idx:
+        if inject_after_idx is not None and i == inject_after_idx:
             if len(main_news) == 1 or i == len(main_news) - 1:
-                # injecting after the last (or only) story
+                # inject after last (or only) story
                 html_content += final_html + main_content_line_html + injected_second_block + end_section_line_html
             else:
-                # injecting in the middle
+                # inject in the middle
                 html_content += final_html + main_content_line_html + injected_second_block + main_content_line_html
             continue
 

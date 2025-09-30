@@ -74,20 +74,28 @@
         <form method="post">
 
             <fieldset style="border:1px solid #ddd;padding:16px;border-radius:8px;margin-bottom:24px;background:#fff">
-                <legend style="padding:0 8px;color:#2c3e50;font-weight:bold">Ads placement</legend>
-                <label for="ads_position">Insert ad after story #</label>
-                <input
-                  type="number"
-                  id="ads_position"
-                  name="ads_position"
-                  min="1"
-                  step="1"
-                  value="1"
-                  style="width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:4px;box-sizing:border-box"
-                />
-                <p style="margin:8px 0 0;color:#666;font-size:13px">
-                  Example: 1 = between the 1st and 2nd stories. If the number is larger than the total stories, the ad will be placed at the end.
-                </p>
+                <legend style="padding:0 8px;color:#2c3e50;font-weight:bold">Ads</legend>
+
+                <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                  <input type="checkbox" id="ads_enabled" name="ads_enabled">
+                  Enable ad
+                </label>
+
+                <div id="ads_fields" style="display:none">
+                  <label for="ads_position">Insert ad after story #</label>
+                  <input
+                    type="number"
+                    id="ads_position"
+                    name="ads_position"
+                    min="1"
+                    step="1"
+                    value="1"
+                    style="width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:4px;box-sizing:border-box"
+                  />
+                  <p style="margin:8px 0 0;color:#666;font-size:13px">
+                    Example: 1 = between the 1st and 2nd stories. If the number is larger than the total stories, the ad will be placed at the end.
+                  </p>
+                </div>
               </fieldset>
 
 
@@ -130,6 +138,12 @@
     </div>
 
     <script>
+        // Toggle ads fields
+        const adsEnabled = document.getElementById('ads_enabled');
+        const adsFields  = document.getElementById('ads_fields');
+        function toggleAds() { adsFields.style.display = adsEnabled.checked ? 'block' : 'none'; }
+        adsEnabled.addEventListener('change', toggleAds);
+        toggleAds();
        // Show/hide image placement options based on layout selection
        document.querySelectorAll('input[type="radio"][name^="layout_"]').forEach(radio => {
            radio.addEventListener('change', function() {
@@ -143,5 +157,6 @@
            });
        });
    </script>
+
 
 {% endblock %}

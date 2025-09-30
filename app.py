@@ -106,15 +106,29 @@ def select_images():
     if request.method == 'POST':
         missing_images = False
 
-        try:
-            ads_position = int(request.form.get('ads_position', '1'))
-        except ValueError:
-            ads_position = 1
-        if ads_position < 1:
-            ads_position = 1
+        ads_enabled = bool(request.form.get('ads_enabled'))
+        if ads_enabled:
+            try:
+                ads_position = int(request.form.get('ads_position', '1') or '1')
+            except ValueError:
+                ads_position = 1
+            if ads_position < 1:
+                ads_position = 1
+            news['AdsEnabled'] = True
+            news['AdsPlacement'] = ads_position  # 1-based
+        else:
+            news['AdsEnabled'] = False
+            news.pop('AdsPlacement', None)
 
-            # stash into news so MainSection can use it
-        news['AdsPlacement'] = ads_position
+        # try:
+        #     ads_position = int(request.form.get('ads_position', '1'))
+        # except ValueError:
+        #     ads_position = 1
+        # if ads_position < 1:
+        #     ads_position = 1
+        #
+        #     # stash into news so MainSection can use it
+        # news['AdsPlacement'] = ads_position
 
 
 
