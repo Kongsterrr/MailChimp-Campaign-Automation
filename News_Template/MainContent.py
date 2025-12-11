@@ -50,7 +50,7 @@ def MainSection(news):
         title_html = (
             f'<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top">'
             f'<table width="100%" style="border:0;border-radius:0;border-collapse:separate">'
-            f'<tbody><tr><td style="padding-left:50px;padding-right:50px;padding-top:5px;padding-bottom:5px" class="mceTextBlockContainer">'
+            f'<tbody><tr><td style="padding-left:50px;padding-right:50px;padding-top:10px;padding-bottom:5px" class="mceTextBlockContainer">'
             f'<div data-block-id="{i}" class="mceText" id="dataBlockId-{i}" style="width:100%">'
             f'<h1 style="line-height: 1.25;" class="last-child">'
             f'<span style="font-size: 25px"><span style="font-family: \'Times New Roman\', Times, Baskerville, Georgia, serif">{item["Title"]}</span></span>'
