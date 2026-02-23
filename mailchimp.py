@@ -75,7 +75,7 @@ def create_preview_text(news_item):
 
     if len(preview_text) > 150:
         truncated_text = preview_text[:146].rsplit(' ', 1)[0]
-        preview_text = truncated_text + " ..."
+        preview_text = truncated_text + "..."
 
     return preview_text
 
