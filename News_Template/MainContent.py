@@ -14,9 +14,9 @@ def MainSection(news):
 
     # 👉 the block you want to insert as the 2nd item
     injected_second_block = """
-    <tr><td style="background-color:transparent;padding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;border-radius:0" valign="top" class="mceImageBlockContainer" align="center" id="b132"><div><!--[if !mso]><!--></div><a href="https://www.chineseculturalfoundation.org/" style="display:block" target="_blank" data-block-id="132"><table align="center" border="0" cellpadding="0" cellspacing="0" width="85%" style="border-collapse:separate;margin:0;vertical-align:top;max-width:85%;width:85%;height:auto" role="presentation" data-testid="image-132"><tbody><tr><td style="border:0;border-radius:0;margin:0" valign="top"><img alt="" src="https://mcusercontent.com/ba1a72c67a1a445629b16aaf2/images/d57765de-cbe1-a10e-66e8-2cd832108577.png" width="561" height="auto" style="display:block;max-width:100%;height:auto;border-radius:0" class="imageDropZone mceImage"></td></tr></tbody></table></a><div><!--<![endif]--></div><div>
+    <tr><td style="background-color:transparent;padding-top:12px;padding-bottom:12px;padding-right:0;padding-left:0;border:0;border-radius:0" valign="top" class="mceImageBlockContainer" align="center" id="b132"><div><!--[if !mso]><!--></div><a href="https://www.chinadaily.com.cn/a/202603/06/WS69aa38d5a310d6866eb3c12f.html" style="display:block" target="_blank" data-block-id="132"><table align="center" border="0" cellpadding="0" cellspacing="0" width="85%" style="border-collapse:separate;margin:0;vertical-align:top;max-width:85%;width:85%;height:auto" role="presentation" data-testid="image-132"><tbody><tr><td style="border:0;border-radius:0;margin:0" valign="top"><img alt="" src="https://mcusercontent.com/ba1a72c67a1a445629b16aaf2/_thumbs/47bc3c87-7d3c-ab96-fc4f-24a8501ae988.png" width="561" height="auto" style="display:block;max-width:100%;height:auto;border-radius:0" class="imageDropZone mceImage"></td></tr></tbody></table></a><div><!--<![endif]--></div><div>
     <!--[if mso]>
-    <a href="https://www.chineseculturalfoundation.org/"><span class="mceImageBorder" style="border:0;border-width:2px;vertical-align:top;margin:0"><img role="presentation" class="imageDropZone mceImage" src="https://mcusercontent.com/ba1a72c67a1a445629b16aaf2/images/d57765de-cbe1-a10e-66e8-2cd832108577.png" alt="" width="561" height="auto" style="display:block;max-width:561px;width:561px;height:auto"/></span></a>
+    <a href="https://www.chinadaily.com.cn/a/202603/06/WS69aa38d5a310d6866eb3c12f.html"><span class="mceImageBorder" style="border:0;border-width:2px;vertical-align:top;margin:0"><img role="presentation" class="imageDropZone mceImage" src="https://mcusercontent.com/ba1a72c67a1a445629b16aaf2/_thumbs/47bc3c87-7d3c-ab96-fc4f-24a8501ae988.png" alt="" width="561" height="auto" style="display:block;max-width:561px;width:561px;height:auto"/></span></a>
     <![endif]-->
     </div></td></tr>
     """.strip()
@@ -56,6 +56,18 @@ def MainSection(news):
             f'<span style="font-size: 25px"><span style="font-family: \'Times New Roman\', Times, Baskerville, Georgia, serif">{item["Title"]}</span></span>'
             f'</h1></div></td></tr></tbody></table></td></tr>'
         )
+
+        author = item.get("Author", "")
+        author_html = ""
+
+        if news.get("ShowAuthor") and author:
+            author_html = (
+                f'<p style="margin-top:20px;margin-bottom:0;" class="last-child">'
+                f'<em><span style="color:rgb(65, 64, 64);">'
+                f'<span style="font-size:14.6667px">'
+                f'<span style="font-family:Arial, sans-serif">{author}</span>'
+                f'</span></span></em></p>'
+            )
 
         # Image (vertical layout default)
         if layout == "vertical":
@@ -100,13 +112,37 @@ def MainSection(news):
                 f'</div></td></tr></tbody></table></td></tr>'
             )
 
-            final_html = title_html + image_html + image_script_html + content_html
+
+
+            author_table_html = ""
+
+            if author_html:
+                author_table_html = (
+                    f'<tr><td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top">'
+                    f'<table width="100%" style="border:0;border-radius:0;border-collapse:separate">'
+                    f'<tbody><tr>'
+                    f'<td style="padding-left:50px;padding-right:50px;padding-top:0px;padding-bottom:0" class="mceTextBlockContainer">'
+                    f'<div data-block-id="{i}-author" class="mceText" id="dataBlockId-{i}-author" style="width:100%">'
+                    f'{author_html}'
+                    f'</div></td></tr></tbody></table></td></tr>'
+                )
+
+            final_html = (
+                    title_html
+                    + image_html
+                    + image_script_html
+                    + content_html
+                    + author_table_html
+            )
 
         else:
             # Horizontal layout (image left/right)
             item_image = item.get("Image", "")
             text_before_link = item.get("Content_TextBeforeLink", "")
             text_after_link = item.get("Content_TextAfterLink", "")
+
+            horizontal_text_bottom_padding = "0" if author_html else "5px"
+            horizontal_layout_bottom_padding = "0" if author_html else "5px"
 
             if image_placement == "left":
                 left_content = f"""
@@ -129,13 +165,13 @@ def MainSection(news):
                                             <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top" id="blockContainerId-{i}">
                                                 <table width="100%" style="border:0;border-radius:0;border-collapse:separate">
                                                     <tbody><tr>
-                                                        <td style="padding-left:0;padding-right:50px;padding-top:5px;padding-bottom:5px" class="mceTextBlockContainer">
-                                                            <div data-block-id="{i}" class="mceText" id="dataBlockId-{i}" style="width:100%">
+                                                        <td style="padding-left:0;padding-right:50px;padding-top:5px;padding-bottom:{horizontal_text_bottom_padding}" class="mceTextBlockContainer">                                                            <div data-block-id="{i}" class="mceText" id="dataBlockId-{i}" style="width:100%">
                                                                 <p class="last-child">
                                                                     {text_before_link}
                                                                     <a href="{item["Content_Link"]}" target="_blank">{item["Content_TextToLink"]}</a>
                                                                     {text_after_link}
                                                                 </p>
+                                                                {author_html}
                                                             </div>
                                                         </td>
                                                     </tr></tbody>
@@ -153,11 +189,11 @@ def MainSection(news):
                                             <td style="padding-top:0;padding-bottom:0;padding-right:0;padding-left:0" valign="top" id="blockContainerId-{i}">
                                                 <table width="100%" style="border:0;border-radius:0;border-collapse:separate">
                                                     <tbody><tr>
-                                                        <td style="padding-left:50px;padding-right:0;padding-top:0;padding-bottom:5px" class="mceTextBlockContainer">
-                                                            <div data-block-id="{i}" class="mceText" id="dataBlockId-{i}" style="width:100%">
+                                                        <td style="padding-left:50px;padding-right:0;padding-top:0;padding-bottom:{horizontal_text_bottom_padding}" class="mceTextBlockContainer">                                                            <div data-block-id="{i}" class="mceText" id="dataBlockId-{i}" style="width:100%">
                                                                 <p class="last-child">
                                                                     {text_before_link}<a href="{item["Content_Link"]}" target="_blank">{item["Content_TextToLink"]}</a>{text_after_link}
                                                                 </p>
+                                                                {author_html}
                                                             </div>
                                                         </td>
                                                     </tr></tbody>
@@ -184,7 +220,7 @@ def MainSection(news):
             final_html = title_html + f"""
                             <tr><td valign="top" class="mceGutterContainer" id="gutterContainerId-{i}">
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate" role="presentation">
-                                    <tbody><tr><td style="padding-top:5px;padding-bottom:5px;padding-right:0;padding-left:0" valign="top" class="mceLayoutContainer" id="blockContainerId-{i}">
+                                    <tbody><tr><td style="padding-top:5px;padding-bottom:{horizontal_layout_bottom_padding};padding-right:0;padding-left:0" valign="top" class="mceLayoutContainer" id="blockContainerId-{i}">
                                         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation" data-block-id="{i}" id="section_{i}" class="mceLayout">
                                             <tbody><tr class="mceRow">
                                                 <td style="background-position:center;background-repeat:no-repeat;background-size:cover" valign="top">
@@ -223,9 +259,13 @@ def MainSection(news):
                         """
 
         # Build divider variants (bold vs thin)
+        divider_top_padding = "6px" if news.get("ShowAuthor") else "6px"
+        thin_divider_top_padding = "11px" if news.get("ShowAuthor") else "20px"
+        end_divider_top_padding = "6px" if news.get("ShowAuthor") else "20px"
+
         if divider_bold:
             main_content_line_html = (
-                f'<tr><td style="background-color:transparent;padding-top:6px;padding-bottom:6px;padding-right:50px;padding-left:50px" '
+                f'<tr><td style="background-color:transparent;padding-top:{divider_top_padding};padding-bottom:6px;padding-right:50px;padding-left:50px" '
                 f'class="mceBlockContainer" valign="top">'
                 f'<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" '
                 f'role="presentation" class="mceDividerContainer" data-block-id="{i}">'
@@ -234,7 +274,7 @@ def MainSection(news):
             )
         else:
             main_content_line_html = (
-                f'<tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:50px;padding-left:50px" '
+                f'<tr><td style="background-color:transparent;padding-top:{thin_divider_top_padding};padding-bottom:20px;padding-right:50px;padding-left:50px" '
                 f'class="mceBlockContainer" valign="top">'
                 f'<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" '
                 f'role="presentation" class="mceDividerContainer" data-block-id="100">'
@@ -243,7 +283,7 @@ def MainSection(news):
             )
 
         end_section_line_html = (
-            f'<tr><td style="background-color:transparent;padding-top:20px;padding-bottom:20px;padding-right:50px;padding-left:50px" '
+            f'<tr><td style="background-color:transparent;padding-top:{end_divider_top_padding};padding-bottom:20px;padding-right:50px;padding-left:50px" '
             f'class="mceBlockContainer" valign="top">'
             f'<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:transparent;width:100%" '
             f'role="presentation" class="mceDividerContainer" data-block-id="100">'

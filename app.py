@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, redirect, url_for, session, f
 from werkzeug.utils import secure_filename
 import os
 from ParseWord import parse_word_document
-from mailchimp import scrape_image_and_caption
 from News_Template.MainContent import MainSection
 from News_Template.AlsoFeatured import AlsoFeatured
 from News_Template.BeforeContent import before_content_html
@@ -14,6 +13,7 @@ from login import *
 from flask_jwt_extended import unset_jwt_cookies, get_jwt_identity, get_jwt, jwt_required
 import jwt
 from pathlib import Path
+from mailchimp import scrape_image_and_caption, scrape_author
 
 load_dotenv()
 
@@ -90,6 +90,10 @@ def bold_or_not():
         divider_choice = request.form.get('divider_style', 'bold')  # default bold
         # Persist the choice inside the same news object so MainSection can see it
         news['DividerBold'] = divider_choice == 'bold'
+
+        show_author = request.form.get('show_author') == 'yes'
+        news['ShowAuthor'] = show_author
+
         session['news_data'] = news               # write back
         return redirect(url_for('select_images'))  # continue normal flow
 
@@ -147,6 +151,12 @@ def select_images():
                 image_placement = request.form.get(f'image_placement_{index}', 'left')
                 news["News"][index]["ImagePlacement"] = image_placement
 
+        if news.get("ShowAuthor"):
+            for item in news["News"]:
+                item["Author"] = scrape_author(item["Content_Link"])
+        else:
+            for item in news["News"]:
+                item.pop("Author", None)
 
         for item in news['News']:
             if 'Image_Index' in item:

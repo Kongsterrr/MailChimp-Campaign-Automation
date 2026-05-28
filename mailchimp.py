@@ -205,6 +205,30 @@ def scrape_image_and_caption(content_link, img_index):
         return None, None, None
 
 
+def scrape_author(content_link):
+    try:
+        response = requests.get(content_link, timeout=10)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        info_l = soup.select_one("div.info span.info_l")
+
+        if not info_l:
+            return ""
+
+        text = info_l.get_text(" ", strip=True)
+        # Example: "By Denis Simon | CHINA DAILY | Updated: ..."
+        match = re.search(r"\bBy\s+(.+?)\s*\|", text, re.IGNORECASE)
+
+        if match:
+            return f"By {match.group(1).strip()}"
+
+        return ""
+
+    except requests.RequestException as e:
+        print(f"Error while fetching author from {content_link}: {e}")
+        return ""
+
 def main():
     news = parse_word_document('/Users/Jack/desktop/newsletter2.docx')
     news["Date"] = "August 14, 2024"
