@@ -57,10 +57,12 @@ def MainSection(news):
             f'</h1></div></td></tr></tbody></table></td></tr>'
         )
 
-        author = item.get("Author", "")
-        author_html = ""
+        author = item.get("Author", "").strip()
 
-        if news.get("ShowAuthor") and author:
+        if news.get("ShowAuthor"):
+            if not author:
+                author = "By China Daily Editorial"
+
             author_html = (
                 f'<p style="margin-top:20px;margin-bottom:0;" class="last-child">'
                 f'<em><span style="color:rgb(65, 64, 64);">'
@@ -68,6 +70,8 @@ def MainSection(news):
                 f'<span style="font-family:Arial, sans-serif">{author}</span>'
                 f'</span></span></em></p>'
             )
+        else:
+            author_html = ""
 
         # Image (vertical layout default)
         if layout == "vertical":
